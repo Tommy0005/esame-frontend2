@@ -1,9 +1,19 @@
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Shell from './components/Shell';
+import MovieDetail from './pages/MovieDetail';
+import MovieList from './pages/MovieList';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Shell />,
+    children: [
+      { index: true, element: <MovieList /> },
+      { path: 'movies/:id', element: <MovieDetail /> },
+    ],
+  },
+]);
+
 export default function App() {
-  return (
-    <div className="shell">
-      <main className="main">
-        <p>Setup iniziale progetto — esame-fe2-oldani</p>
-      </main>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
