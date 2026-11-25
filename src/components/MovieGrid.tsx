@@ -1,5 +1,9 @@
-import type { MovieGridProps } from '../types/movie';
+import type { Movie } from '../types/movie';
 import MovieCard from './MovieCard';
+
+interface MovieGridProps {
+  movies: Movie[];
+}
 
 export default function MovieGrid({ movies }: MovieGridProps) {
   return (

@@ -12,9 +12,9 @@ export default function MovieDetail() {
   useEffect(() => {
     const apiKey = import.meta.env.VITE_TMDB_API_KEY;
 
-    async function loadDetail() {
+    async function getMovie() {
       if (!id) {
-        setError('ID movie non trovato');
+        setError('ID film mancante');
         setLoading(false);
         return;
       }
@@ -27,7 +27,7 @@ export default function MovieDetail() {
           `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}`
         );
         if (!res.ok) {
-          throw new Error('Errore nella risposta API');
+          throw new Error('Errore nella chiamata API');
         }
 
         const data: MovieDetailType = await res.json();
@@ -39,18 +39,18 @@ export default function MovieDetail() {
       }
     }
 
-    loadDetail();
+    getMovie();
   }, [id]);
 
   return (
-    <>
+    <div>
       <Link className="back-link" to="/">
-        ← Torna all’elenco
+        &lt;- Torna all'elenco
       </Link>
 
-      {loading && <p className="note">Caricamento dettaglio movie...</p>}
-      {error && <p className="note">Errore: {error}</p>}
+      {loading && <p className="note">Caricamento dettaglio...</p>}
+      {error && <p className="note">{error}</p>}
       {!loading && !error && movie && <MovieDetailView movie={movie} />}
-    </>
+    </div>
   );
 }

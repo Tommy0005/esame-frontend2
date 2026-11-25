@@ -11,39 +11,33 @@ export default function MovieList() {
     const apiKey = import.meta.env.VITE_TMDB_API_KEY;
     const url = `https://api.themoviedb.org/3/search/movie?query=The%20Lord%20of%20the%20Rings&include_adult=false&language=en-US&page=1&api_key=${apiKey}`;
 
-    async function loadMovies() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const res = await fetch(url);
+    fetch(url)
+      .then((res) => {
         if (!res.ok) {
-          throw new Error('Errore nella risposta API');
+          throw new Error('Errore nella chiamata API');
         }
-
-        const data: SearchResponse = await res.json();
+        return res.json();
+      })
+      .then((data: SearchResponse) => {
         setMovies(data.results.slice(0, 20));
-      } catch {
-        setError('Errore nel caricamento dei film');
-      } finally {
         setLoading(false);
-      }
-    }
-
-    loadMovies();
+      })
+      .catch(() => {
+        setError('Errore nel caricamento dei film');
+        setLoading(false);
+      });
   }, []);
 
   return (
-    <>
+    <div>
       <h1 className="page-title">The Lord of the Rings</h1>
       <p className="page-sub">
-        Risultati fissi da API · query=The Lord of the Rings · page=1 · max 20
-        items · senza filtri / paginazione
+        Risultati da TMDB (query fissa, pagina 1, max 20 film)
       </p>
 
-      {loading && <p className="note">Caricamento elenco movies...</p>}
-      {error && <p className="note">Errore: {error}</p>}
+      {loading && <p className="note">Caricamento in corso...</p>}
+      {error && <p className="note">{error}</p>}
       {!loading && !error && <MovieGrid movies={movies} />}
-    </>
+    </div>
   );
 }

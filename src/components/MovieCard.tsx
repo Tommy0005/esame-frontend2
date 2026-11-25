@@ -1,24 +1,33 @@
 import { Link } from 'react-router-dom';
-import type { MovieCardProps } from '../types/movie';
-import { formatReleaseDate, getPosterUrl } from '../utils/tmdb';
+import type { Movie } from '../types/movie';
+
+interface MovieCardProps {
+  movie: Movie;
+}
 
 export default function MovieCard({ movie }: MovieCardProps) {
-  const posterUrl = getPosterUrl(movie.poster_path);
+  const poster = movie.poster_path
+    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+    : null;
+
+  const dataUscita = movie.release_date
+    ? movie.release_date.split('-').reverse().join('/')
+    : 'N/D';
 
   return (
-    <article className="card">
+    <div className="card">
       <div className="card__poster">
-        {posterUrl ? (
-          <img src={posterUrl} alt={`Poster di ${movie.title}`} />
+        {poster ? (
+          <img src={poster} alt={movie.title} />
         ) : (
           <span>Poster non disponibile</span>
         )}
       </div>
+
       <div className="card__body">
         <h2 className="card__title">{movie.title}</h2>
         <p className="card__meta">
-          Uscita: {formatReleaseDate(movie.release_date)} · Voto:{' '}
-          {movie.vote_average.toFixed(1)}
+          Uscita: {dataUscita} | Voto: {movie.vote_average.toFixed(1)}
         </p>
         <p className="card__overview">
           {movie.overview || 'Nessuna descrizione disponibile.'}
@@ -27,6 +36,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
           Dettaglio
         </Link>
       </div>
-    </article>
+    </div>
   );
 }
